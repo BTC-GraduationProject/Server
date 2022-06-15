@@ -19,7 +19,7 @@ public class RecipeDao {
     }
 
     public List<GetRecipeRes> getRecommendRecipe(int userIdx){
-        String getRecipeQuery = "select R.Idx, R.recipeName, R.makeTime, GROUP_CONCAT(UFI.foodName) foodHave\n" +
+        String getRecipeQuery = "select R.Idx, R.recipeName, R.makeTime, UFI.foodName foodHave, RP.photoUrl\n" +
                 "from Recipe R\n" +
                 "join\n" +
                 "(select *\n" +
@@ -27,6 +27,7 @@ public class RecipeDao {
                 "from Food F, User U\n" +
                 "where U.Idx = F.userIdx and U.Idx = ?) UF\n" +
                 "where UF.foodName like I.igName)UFI on R.Idx = UFI.recipeIdx\n" +
+                "join RecipePhoto RP on R.Idx = RP.recipeIdx\n" +
                 "group by R.Idx";
 
         return this.jdbcTemplate.query(getRecipeQuery,
@@ -34,7 +35,8 @@ public class RecipeDao {
                         rs.getInt("Idx"),
                         rs.getString("recipeName"),
                         rs.getString("makeTime"),
-                        rs.getString("foodHave")),
+                        rs.getString("foodHave"),
+                        rs.getString("photoUrl")),
                 userIdx);
     }
 
