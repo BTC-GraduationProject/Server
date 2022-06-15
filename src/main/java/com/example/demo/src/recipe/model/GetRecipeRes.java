@@ -11,4 +11,5 @@ public class GetRecipeRes {
     private String recipeName;
     private String makeTime;
     private String foodHave;
+    private String photoUrl;
 }
