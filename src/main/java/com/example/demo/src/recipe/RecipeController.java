@@ -50,6 +50,15 @@ public class RecipeController {
     @ResponseBody
     @PostMapping("{userIdx}")
     public BaseResponse<List<String>> createRecipe(@RequestBody PostRecipeReq postRecipeReq, @PathVariable("userIdx") int userIdx){
+        //레시피 사진을 넣지 않았을 때
+        if (postRecipeReq.getPhoto() == null || postRecipeReq.getPhoto().size() == 0) {
+            return new BaseResponse<>(RECIPE_EMPTY_PHOTO);
+        }
+        //레시피 재료를 넣지 않았을 때
+        if (postRecipeReq.getIgName() == null || postRecipeReq.getIgName().size() == 0) {
+            return new BaseResponse<>(RECIPE_EMPTY_INGREDIENT);
+        }
+
         try{
             List<String> getRecipe = recipeService.createRecipe(postRecipeReq, userIdx);
             return new BaseResponse<>(getRecipe);

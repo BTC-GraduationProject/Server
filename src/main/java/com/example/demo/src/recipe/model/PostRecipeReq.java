@@ -12,6 +12,7 @@ public class PostRecipeReq {
 
     private List<String> recipeUrl;
     private List<String> Photo;
+    private List<String> igName;
 
 
     private String recipeName;

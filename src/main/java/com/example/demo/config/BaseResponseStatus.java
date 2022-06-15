@@ -29,6 +29,10 @@ public enum BaseResponseStatus {
     USERS_EMPTY_NAME(false, 2013, "이름을 입력하지 않음."),
     USERS_EMPTY_ID(false, 2014, "생성할 아이디를 입력해주세요."),
 
+    // recipe
+    RECIPE_EMPTY_PHOTO(false, 2020, "레시피의 사진을 넣어주세요."),
+    RECIPE_EMPTY_INGREDIENT(false, 2021, "레시피의 재료을 넣어주세요."),
+
 
     /**
      * 3000 : Response 오류

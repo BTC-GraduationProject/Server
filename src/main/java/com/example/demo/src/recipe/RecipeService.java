@@ -44,8 +44,9 @@ public class RecipeService {
 
             List newRecipePictureList = recipeDao.createRecipePicture(postRecipeReq, recipeIdx);
             List newRecipeUrlList = recipeDao.createRecipeLink(postRecipeReq, recipeIdx);
+            List newRecipeIgNameList = recipeDao.createRecipeIngredient(postRecipeReq, recipeIdx);
 
-            List newRecipeDetail = new ArrayList<>(Arrays.asList(newRecipe, newRecipePictureList, newRecipeUrlList));
+            List newRecipeDetail = new ArrayList<>(Arrays.asList(newRecipe, newRecipePictureList, newRecipeUrlList, newRecipeIgNameList));
 
             return newRecipeDetail;
         }

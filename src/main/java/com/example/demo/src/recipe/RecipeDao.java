@@ -59,13 +59,13 @@ public class RecipeDao {
     public List<String> createRecipePicture(PostRecipeReq postRecipeReq, int recipeIdx){
         List<String> pic = postRecipeReq.getPhoto();
         List newPictureList = new ArrayList<>();
-        if(pic != null){
-            for(String newpic:pic){
-                String createRecipePicture = "insert into RecipePhoto(photoUrl, recipeIdx) values(?,?)";
-                this.jdbcTemplate.update(createRecipePicture,newpic, recipeIdx);
-                newPictureList.add(newpic);
-            }
+
+        for(String newpic:pic){
+            String createRecipePicture = "insert into RecipePhoto(photoUrl, recipeIdx) values(?,?)";
+            this.jdbcTemplate.update(createRecipePicture,newpic, recipeIdx);
+            newPictureList.add(newpic);
         }
+
         return newPictureList;
     }
 
@@ -80,6 +80,20 @@ public class RecipeDao {
                 newLinkList.add(newurl);
             }
         }
+        return newLinkList;
+    }
+
+    // 레시피 등록시 재료첨부
+    public List<String> createRecipeIngredient(PostRecipeReq postRecipeReq, int recipeIdx){
+        List<String> igName = postRecipeReq.getIgName();
+        List newLinkList = new ArrayList<>();
+
+        for(String newigName:igName) {
+            String createRecipeIngredient = "insert into Ingredient(igName, recipeIdx) values (?,?)";
+            this.jdbcTemplate.update(createRecipeIngredient, newigName, recipeIdx);
+            newLinkList.add(newigName);
+        }
+
         return newLinkList;
     }
 
