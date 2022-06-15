@@ -19,14 +19,14 @@ public class RecipeDao {
     }
 
     public List<GetRecipeRes> getRecommendRecipe(int userIdx){
-        String getRecipeQuery = "select R.Idx, R.recipeName, R.makeTime, GROUP_CONCAT(FI.foodName) foodHave\n" +
+        String getRecipeQuery = "select R.Idx, R.recipeName, R.makeTime, GROUP_CONCAT(UFI.foodName) foodHave\n" +
                 "from Recipe R\n" +
-                "join (select F.userIdx, F.foodName, I.recipeIdx, I.main #, F.expirationDate\n" +
-                "     from Food F, Ingredient I\n" +
-                "     where F.Idx = I.foodIdx\n" +
-                "    ) FI on FI.recipeIdx = R.Idx\n" +
-                "join User U on R.userIdx = U.Idx\n" +
-                "where U.Idx = ?\n" +
+                "join\n" +
+                "(select *\n" +
+                "from Ingredient I,(select F.foodName\n" +
+                "from Food F, User U\n" +
+                "where U.Idx = F.userIdx and U.Idx = ?) UF\n" +
+                "where UF.foodName like I.igName)UFI on R.Idx = UFI.recipeIdx\n" +
                 "group by R.Idx";
 
         return this.jdbcTemplate.query(getRecipeQuery,
