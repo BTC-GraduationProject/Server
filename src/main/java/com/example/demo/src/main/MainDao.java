@@ -19,21 +19,16 @@ public class MainDao {
 
     public List<GetMainFoodRes> getMainFoodResList(int userIdx){
         System.out.println("foodDao");
-        String getListQuery = "select F.Idx,\n" +
-                "                      F.foodName,\n" +
-                "                      F.foodPhoto,\n" +
-                "                      F.amount,\n" +
-                "                      F.storageType, \n" +
-                "                       F.expirationDate,\n" +
-                "                     case when 31 > timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
-                "                            then concat(timestampdiff(Day , current_timestamp, F.expirationDate), '일 남음')\n" +
-                "                          when 12 > timestampdiff(MONTH , current_timestamp, F.expirationDate)\n" +
-                "                            then concat(timestampdiff(MONTH , current_timestamp, F.expirationDate), '달 남음')\n" +
-                "                            else concat(timestampdiff(YEAR , current_timestamp, F.expirationDate), '년 남음')\n" +
-                "                          end ED_Left\n" +
-                "                from Food F\n" +
-                "                where F.userIdx = ?\n" +
-                "                order by expirationDate";
+        String getListQuery = "select F.Idx, F.foodName, F.foodPhoto, F.amount, F.storageType, F.expirationDate,\n" +
+                "     case when 0 > timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
+                "            then timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
+                "        when 0 = timestampdiff(DAY , current_timestamp, F.expirationDate) && 0 > timestampdiff(SECOND , current_timestamp, F.expirationDate)\n" +
+                "            then -1\n" +
+                "        else timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
+                "          end ED_Left\n" +
+                "from Food F\n" +
+                "where F.userIdx = ?\n" +
+                "order by expirationDate";
         int GetUserIdx = userIdx;
         return this.jdbcTemplate.query(getListQuery,
                 (rs,rowNum) -> new GetMainFoodRes(
@@ -43,27 +38,30 @@ public class MainDao {
                         rs.getInt("amount"),
                         rs.getInt("storageType"),
                         rs.getString("expirationDate"),
-                        rs.getString("ED_Left")),
+                        rs.getInt("ED_Left")),
                 GetUserIdx);
 
     }
 
     public List<GetMainRecipeRes> getMainRecipeResList(int userIdx){
         System.out.println("RecipeDao");
-        String getListQuery ="select R.Idx, R.recipeName, GROUP_CONCAT(FI.foodName) foodHave\n" +
+        String getListQuery = "select R.Idx, R.recipeName, R.makeTime, UFI.foodName foodHave, RP.photoUrl\n" +
                 "from Recipe R\n" +
-                "join (select F.userIdx, F.foodName, I.recipeIdx, I.main #, F.expirationDate\n" +
-                "     from Food F, Ingredient I\n" +
-                "     where F.Idx = I.foodIdx\n" +
-                "    ) FI on FI.recipeIdx = R.Idx\n" +
-                "join User U on R.userIdx = U.Idx\n" +
-                "where U.Idx = ?\n" +
-                "group by R.Idx;";
+                "join\n" +
+                "(select *\n" +
+                "from Ingredient I,(select F.foodName\n" +
+                "from Food F, User U\n" +
+                "where U.Idx = F.userIdx and U.Idx = ?) UF\n" +
+                "where UF.foodName like I.igName)UFI on R.Idx = UFI.recipeIdx\n" +
+                "join RecipePhoto RP on R.Idx = RP.recipeIdx\n" +
+                "group by R.Idx";
         return this.jdbcTemplate.query(getListQuery,
                 (rs,rowNum) -> new GetMainRecipeRes(
                         rs.getInt("Idx"),
                         rs.getString("recipeName"),
-                        rs.getString("foodHave")),
+                        rs.getString("makeTime"),
+                        rs.getString("foodHave"),
+                        rs.getString("photoUrl")),
                 userIdx);
     }
 

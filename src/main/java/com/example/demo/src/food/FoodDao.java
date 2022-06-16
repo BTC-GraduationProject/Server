@@ -21,18 +21,13 @@ public class FoodDao {
     public List<GetFoodRes> getFoods(int userIdx){
         //System.out.println("다오");
         //System.out.println(userIdx);
-        String getFoodsQuery ="select F.Idx,\n" +
-                "       F.foodName,\n" +
-                "       F.foodPhoto,\n" +
-                "       F.amount,\n" +
-                "       F.storageType, \n " +
-                "       F.expirationDate,\n" +
-                "       case when 31 > timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
-                "            then concat(timestampdiff(Day , current_timestamp, F.expirationDate), '일 남음')\n" +
-                "            when 12 > timestampdiff(MONTH , current_timestamp, F.expirationDate)\n" +
-                "            then concat(timestampdiff(MONTH , current_timestamp, F.expirationDate), '달 남음')\n" +
-                "            else concat(timestampdiff(YEAR , current_timestamp, F.expirationDate), '년 남음')\n" +
-                "            end ED_Left\n" +
+        String getFoodsQuery ="select F.Idx, F.foodName, F.foodPhoto, F.amount, F.storageType, F.expirationDate,\n" +
+                "     case when 0 > timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
+                "            then timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
+                "        when 0 = timestampdiff(DAY , current_timestamp, F.expirationDate) && 0 > timestampdiff(SECOND , current_timestamp, F.expirationDate)\n" +
+                "            then -1\n" +
+                "        else timestampdiff(DAY , current_timestamp, F.expirationDate)\n" +
+                "          end ED_Left\n" +
                 "from Food F\n" +
                 "where F.userIdx = ?\n" +
                 "order by expirationDate";
@@ -45,7 +40,7 @@ public class FoodDao {
                         rs.getInt("amount"),
                         rs.getInt("storageType"),
                         rs.getString("expirationDate"),
-                        rs.getString("ED_Left")),
+                        rs.getInt("ED_Left")),
                 GetUserIdx);
     }
 

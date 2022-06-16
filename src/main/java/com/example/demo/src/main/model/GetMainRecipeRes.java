@@ -9,5 +9,7 @@ import lombok.Setter;
 public class GetMainRecipeRes {
     private int Idx;
     private String recipeName;
+    private String makeTime;
     private String foodHave;
+    private String photoUrl;
 }

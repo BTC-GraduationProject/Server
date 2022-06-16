@@ -13,5 +13,5 @@ public class GetFoodRes {
     private int amount;
     private int storageType;
     private String expirationDate;
-    private String ED_Left;
+    private int ED_Left;
 }
