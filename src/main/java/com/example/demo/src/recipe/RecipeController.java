@@ -3,6 +3,7 @@ package com.example.demo.src.recipe;
 import com.example.demo.src.food.model.GetFoodRes;
 import com.example.demo.src.user.UserProvider;
 import com.example.demo.src.user.UserService;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
@@ -35,7 +36,7 @@ public class RecipeController {
         this.recipeService = recipeService;
         this.jwtService = jwtService;
     }
-
+// 레시피 리스트 출력
     @ResponseBody
     @GetMapping("{userIdx}")
     public BaseResponse<List<GetRecipeRes>> getRecommendRecipes(@PathVariable("userIdx") int userIdx){
@@ -47,6 +48,27 @@ public class RecipeController {
         }
     }
 
+// 레시피 상세보기
+    @ResponseBody
+    @GetMapping("/detail/{recipeIdx}")
+    public BaseResponse<List<String>> getRecipeDetail(@PathVariable("recipeIdx") int recipeIdx){
+        try {
+            List<String> getRecipeDetail  = recipeProvider.getRecipeDetail(recipeIdx);
+            return new BaseResponse<>(getRecipeDetail);
+        }catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+
+
+
+
+
+
+
+// 레시피 추가
     @ResponseBody
     @PostMapping("{userIdx}")
     public BaseResponse<List<String>> createRecipe(@RequestBody PostRecipeReq postRecipeReq, @PathVariable("userIdx") int userIdx){
@@ -67,12 +89,12 @@ public class RecipeController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
+// 레시피 좋아요 누르기
     @ResponseBody
     @PostMapping("{userIdx}/like")
     public BaseResponse<PostRecomRes> createRecommend(@RequestBody PostRecomReq postRecomReq, @PathVariable("userIdx") int userIdx){
         try{
-            System.out.println("컨트롤러");
+            //System.out.println("컨트롤러");
             PostRecomRes postRecomRes = recipeService.createRecommend(postRecomReq,userIdx);
             return new BaseResponse<>(postRecomRes);
         }

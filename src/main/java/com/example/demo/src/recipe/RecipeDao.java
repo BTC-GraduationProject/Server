@@ -17,7 +17,7 @@ public class RecipeDao {
     public void setDataSource(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
-
+// 레시피 리스트 보기
     public List<GetRecipeRes> getRecommendRecipe(int userIdx){
         String getRecipeQuery = "select R.Idx, R.recipeName, R.makeTime, UFI.foodName foodHave, RP.photoUrl\n" +
                 "from Recipe R\n" +
@@ -39,6 +39,57 @@ public class RecipeDao {
                         rs.getString("photoUrl")),
                 userIdx);
     }
+
+// 레시피 상세 설명
+    public GetRecipeDetailRes getRecipeDetail(int recipeIdx){
+        String getRecipeDetailQuery = "select R.recipeName, R.detail, R.makeTime\n" +
+                "from Recipe R\n" +
+                "where R.Idx = ?";
+        return this.jdbcTemplate.queryForObject(getRecipeDetailQuery,
+                (rs, rowNum) -> new GetRecipeDetailRes(
+                        rs.getString("recipeName"),
+                        rs.getString("detail"),
+                        rs.getString("makeTime")),
+                        recipeIdx);
+    }
+// 레시피 첨부사진
+    public List<GetRecipeDetailPhotoRes> GetRecipeDetailPhoto(int recipeIdx){
+        String getPhotoQuery = "select RP.photoUrl\n" +
+                "from RecipePhoto RP\n" +
+                "where RP.recipeIdx = ?";
+        return this.jdbcTemplate.query(getPhotoQuery,
+                (rs,rowNum) -> new GetRecipeDetailPhotoRes(
+                        rs.getString("photoUrl")),
+                recipeIdx);
+    }
+
+// 레시피 첨부 Url
+    public List<GetRecipeDetailUrlRes> GetRecipeDetailUrl(int recipeIdx){
+        String getUrlQuery = "select RU.recipeUrl\n" +
+                "from RecipeUrl RU \n" +
+                "where RU.recipeIdx = ?";
+        return this.jdbcTemplate.query(getUrlQuery,
+                (rs,rowNum) -> new GetRecipeDetailUrlRes(
+                        rs.getString("recipeUrl")),
+                recipeIdx);
+    }
+
+// 레시피 재료
+    public List<GetRecipeDetailIngedientRes> GetRecipeDetailIngerdients(int recipeIdx){
+        String getIngedientsQuery ="select I.igName\n" +
+                "from Ingredient I\n" +
+                "where I.recipeIdx = ?";
+        return this.jdbcTemplate.query(getIngedientsQuery,
+                (rs, rowNum)-> new GetRecipeDetailIngedientRes(
+                        rs.getString("igName")),
+                recipeIdx);
+    }
+
+
+
+
+
+
 
 
 

@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -34,6 +36,27 @@ public class RecipeProvider {
             List<GetRecipeRes> getRecipeRes = recipeDao.getRecommendRecipe(userIdx);
             return getRecipeRes;
         }catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<String> getRecipeDetail(int recipeIdx) throws BaseException{
+        try{
+
+            List newRecipeDetail = new ArrayList<GetRecipeDetailRes>();
+            GetRecipeDetailRes getRecipeDetailRes = recipeDao.getRecipeDetail(recipeIdx);
+            newRecipeDetail.add(getRecipeDetailRes);
+
+            List newRecipeDetailPhoto = recipeDao.GetRecipeDetailPhoto(recipeIdx);
+            List newRecipeDetailUrl = recipeDao.GetRecipeDetailUrl(recipeIdx);
+            List newRecipeDetailIngredient = recipeDao.GetRecipeDetailIngerdients(recipeIdx);
+
+
+            List newRecipeDetails = new ArrayList<>(Arrays.asList(newRecipeDetail, newRecipeDetailPhoto, newRecipeDetailUrl,newRecipeDetailIngredient));
+
+            return newRecipeDetails;
+        }
+        catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
         }
     }
