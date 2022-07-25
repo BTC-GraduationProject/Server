@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
-// 레시피 상세조회 부분 다시 만들어야 함
+
 @RestController
 @RequestMapping("/app/recipes")
 public class RecipeController {
