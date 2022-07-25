@@ -40,7 +40,7 @@ public class UserProvider {
         if(userDao.checkUserPw(userId, userPw) == 0){   // 비밀번호 확인
             throw new BaseException(USERS_EMPTY_USER_PW);   //USERS_EMPTY_USER_PW(false, 2011, "일치하는 비밀번호 없음.")
         }
-        //System.out.println("아이디, 비밀번호 확인");
+        System.out.println("아이디, 비밀번호 확인");
 
         try {
             PostLoginRes loginUserIdx = userDao.loginUser(userId, userPw);
@@ -52,4 +52,65 @@ public class UserProvider {
 
 
 
+
+
+/**
+    public List<GetUserRes> getUsers() throws BaseException{
+        try{
+            List<GetUserRes> getUserRes = userDao.getUsers();
+            return getUserRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetUserRes> getUsersByEmail(String email) throws BaseException{
+        try{
+            List<GetUserRes> getUsersRes = userDao.getUsersByEmail(email);
+            return getUsersRes;
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+                    }
+
+
+    public GetUserRes getUser(int userIdx) throws BaseException {
+        try {
+            GetUserRes getUserRes = userDao.getUser(userIdx);
+            return getUserRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int checkEmail(String email) throws BaseException{
+        try{
+            return userDao.checkEmail(email);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException{
+        User user = userDao.getPwd(postLoginReq);
+        String encryptPwd;
+        try {
+            encryptPwd=new SHA256().encrypt(postLoginReq.getPassword());
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
+        }
+
+        if(user.getPassword().equals(encryptPwd)){
+            int userIdx = user.getUserIdx();
+            String jwt = jwtService.createJwt(userIdx);
+            return new PostLoginRes(userIdx,jwt);
+        }
+        else{
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+
+    }
+**/
 }
