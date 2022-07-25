@@ -17,7 +17,6 @@ import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
-
 @RestController
 @RequestMapping("/app/recipes")
 public class RecipeController {
