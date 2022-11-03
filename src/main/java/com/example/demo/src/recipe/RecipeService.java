@@ -78,10 +78,10 @@ public class RecipeService {
         try {
             int checkMyRecipe = recipeDao.checkMyRecipe(userIdx, RecipeIdx);
             if(checkMyRecipe == 0){
-                System.out.println("삭제 Service 잘못리턴");
                 return 0;
             }
             else {
+                recipeDao.deleteIngredient(RecipeIdx);
                 recipeDao.deleteRecipePhoto(RecipeIdx);
                 recipeDao.deleteRecipeUrl(RecipeIdx);
                 recipeDao.deleteRecipe(RecipeIdx);
@@ -93,7 +93,29 @@ public class RecipeService {
         }
     }
 
+// 레시피 수정
+    public int updateRecipe(int userIdx, int recipeIdx, PostRecipeReq postRecipeReq) throws BaseException{
+        try{
+            int checkMyRecipe = recipeDao.checkMyRecipe(userIdx, recipeIdx);
+            if(checkMyRecipe == 0){
+                return 0;
+            }
+            else {
+                recipeDao.deleteIngredient(recipeIdx);
+                recipeDao.deleteRecipePhoto(recipeIdx);
+                recipeDao.deleteRecipeUrl(recipeIdx);
+                recipeDao.updateRecipe(postRecipeReq, recipeIdx);
 
+//                List newRecipePictureList = recipeDao.createRecipePicture(postRecipeReq, recipeIdx);
+//                List newRecipeUrlList = recipeDao.createRecipeLink(postRecipeReq, recipeIdx);
+//                List newRecipeIgNameList = recipeDao.createRecipeIngredient(postRecipeReq, recipeIdx);
+                return 1;
+            }
+        }
+        catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 
 

@@ -88,11 +88,6 @@ public class RecipeDao {
 
 
 
-
-
-
-
-
 // 레시피 추가
     public PostCreateNewRecipe createNewRecipe(PostRecipeReq postRecipeReq, int userIdx){
         String createRecipeQuery  = "insert into Recipe(recipeName, userIdx, detail, makeTime)\n" +
@@ -192,6 +187,13 @@ public int checkMyRecipe(int userIdx, int RecipeIdx) {
         this.jdbcTemplate.update(deleteUrlQuery, recipeIdx);
     }
 
+// ingredient 삭제 쿼리
+    public void deleteIngredient(int recipeIdx) {
+        String deleteIngredientQuery = "delete from Ingredient I\n" +
+                "where I.recipeIdx = ?;";
+        this.jdbcTemplate.update(deleteIngredientQuery, recipeIdx);
+    }
+
 
 
 //레시피 삭제(비활성화)
@@ -201,6 +203,18 @@ public int checkMyRecipe(int userIdx, int RecipeIdx) {
                 "where R.Idx = ?;";
         this.jdbcTemplate.update(deleteRecipeQuery, recipeIdx);
     }
+
+// 레시피 수정
+    public void updateRecipe(PostRecipeReq postRecipeReq, int recipeIdx){
+        String updateRecipeQuery = "update Recipe R\n" +
+                "set R.recipeName = ?, " +
+                "R.detail = ?, " +
+                "R.makeTime  = ?\n" +
+                "where R.Idx = ?;";
+        this.jdbcTemplate.update(updateRecipeQuery, postRecipeReq.getRecipeName(), postRecipeReq.getDetail(), postRecipeReq.getMakeTime(), recipeIdx);
+    }
+
+
 
 }
 

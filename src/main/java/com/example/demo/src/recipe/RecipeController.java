@@ -61,13 +61,6 @@ public class RecipeController {
     }
 
 
-
-
-
-
-
-
-
 // 레시피 추가
     @ResponseBody
     @PostMapping("{userIdx}")
@@ -105,10 +98,10 @@ public class RecipeController {
 
 // 레시피 삭제
     @ResponseBody
-    @PatchMapping("/{userIdx}/{RecipeIdx}/delete")
-    public BaseResponse<String> deleteRecipe(@PathVariable("userIdx") int userIdx, @PathVariable("RecipeIdx") int RecipeIdx){
+    @PatchMapping("/{userIdx}/{recipeIdx}/delete")
+    public BaseResponse<String> deleteRecipe(@PathVariable("userIdx") int userIdx, @PathVariable("recipeIdx") int recipeIdx){
         try{
-            int deleteRecipe = recipeService.deleteRecipe(userIdx, RecipeIdx);
+            int deleteRecipe = recipeService.deleteRecipe(userIdx, recipeIdx);
             if(deleteRecipe == 0){
                 throw new BaseException(INVALID_USER_JWT);
             }
@@ -120,7 +113,25 @@ public class RecipeController {
         }
     }
 
-
+// 레시피 수정
+    @ResponseBody
+    @PatchMapping("/{userIdx}/{recipeIdx}/update")
+    public BaseResponse<String> updateRecipe(@RequestBody PostRecipeReq postRecipeReq, @PathVariable("userIdx") int userIdx, @PathVariable("recipeIdx") int recipeIdx){
+        System.out.println("컨트롤러 진입");
+        try{
+            System.out.println("try문 진입");
+            int updateRecipe = recipeService.updateRecipe(userIdx, recipeIdx, postRecipeReq);
+            System.out.println(updateRecipe);
+            if(updateRecipe == 0){
+                throw new BaseException(INVALID_USER_JWT);
+            }
+            else {
+                return new BaseResponse<>("레시피 수정 성공");
+            }
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 
 }
