@@ -103,4 +103,24 @@ public class RecipeController {
         }
     }
 
+// 레시피 삭제
+    @ResponseBody
+    @PatchMapping("/{userIdx}/{RecipeIdx}/delete")
+    public BaseResponse<String> deleteRecipe(@PathVariable("userIdx") int userIdx, @PathVariable("RecipeIdx") int RecipeIdx){
+        try{
+            int deleteRecipe = recipeService.deleteRecipe(userIdx, RecipeIdx);
+            if(deleteRecipe == 0){
+                throw new BaseException(INVALID_USER_JWT);
+            }
+            else {
+                return new BaseResponse<>("레시피 삭제 성공");
+            }
+        }catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+
+
+
 }

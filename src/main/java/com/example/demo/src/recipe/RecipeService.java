@@ -73,6 +73,27 @@ public class RecipeService {
         }
     }
 
+// 레시피 삭제
+    public int deleteRecipe(int userIdx, int RecipeIdx) throws BaseException{
+        try {
+            int checkMyRecipe = recipeDao.checkMyRecipe(userIdx, RecipeIdx);
+            if(checkMyRecipe == 0){
+                System.out.println("삭제 Service 잘못리턴");
+                return 0;
+            }
+            else {
+                recipeDao.deleteRecipePhoto(RecipeIdx);
+                recipeDao.deleteRecipeUrl(RecipeIdx);
+                recipeDao.deleteRecipe(RecipeIdx);
+                return 1;
+            }
+        }
+        catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
 
 
 
